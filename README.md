@@ -1,128 +1,127 @@
-# Descrição
+# JWT Validator API com Testes Automatizados
 
-Construa uma aplicação que exponha uma api web que recebe por parametros um JWT (string) e verifica se é valida conforme regras abaixo:
+Este projeto expõe uma API que valida tokens JWT conforme regras específicas. Além disso, há um conjunto de testes automatizados implementados com Cypress para garantir a validade e o comportamento da aplicação.
 
-- Deve ser um JWT válido
-- Deve conter apenas 3 claims (Name, Role e Seed)
-- A claim Name não pode ter carácter de números
-- A claim Role deve conter apenas 1 dos três valores (Admin, Member e External)
-- A claim Seed deve ser um número primo.
-- O tamanho máximo da claim Name é de 256 caracteres.
+## Sumário
 
-#  Definição
-Input: Um JWT (string).  
-Output: Um boolean indicando se a valido ou não.
+- [Descrição do Projeto](#descrição-do-projeto)
+- [Funcionalidades](#funcionalidades)
+- [Requisitos de Sistema](#requisitos-de-sistema)
+- [Instalação](#instalação)
+- [Executando o Servidor](#executando-o-servidor)
+- [Executando os Testes](#executando-os-testes)
+- [Detalhes Técnicos](#detalhes-técnicos)
+- [Estrutura de Diretórios](#estrutura-de-diretórios)
+- [Contribuição](#contribuição)
+- [Licença](#licença)
 
-Use a linguagem de programação que considera ter mais conhecimento.
+## Descrição do Projeto
 
-# Massa de teste 
+Esta aplicação valida tokens JWT conforme as seguintes regras:
 
-### Caso 1:
-Entrada:
-```
-eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJTZWVkIjoiNzg0MSIsIk5hbWUiOiJUb25pbmhvIEFyYXVqbyJ9.QY05sIjtrcJnP533kQNk8QXcaleJ1Q01jWY_ZzIZuAg
-```
-Saida:
-```
-verdadeiro
-```
-Justificativa:
-Abrindo o JWT, as informações contidas atendem a descrição:
-```json
+- O JWT deve ser válido.
+- Deve conter exatamente 3 claims: `Name`, `Role`, e `Seed`.
+- O claim `Name` não pode conter números e seu tamanho máximo é de 256 caracteres.
+- O claim `Role` deve conter um dos seguintes valores: `Admin`, `Member` ou `External`.
+- O claim `Seed` deve ser um número primo.
+
+## Funcionalidades
+
+- **API REST** para validação de JWT.
+- **Validação automática** de claims conforme as regras descritas.
+- **Testes automatizados** utilizando Cypress para garantir a robustez e consistência da API.
+
+## Requisitos de Sistema
+
+- [Node.js](https://nodejs.org/) (versão 12 ou superior)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+- [Cypress](https://www.cypress.io/)
+
+## Instalação
+
+### Passo 1: Clonar o Repositório
+
+Clone este repositório em sua máquina local:
+
+git clone https://github.com/SEU_USUARIO/jwt-validator.git
+cd jwt-validator
+
+
+### Passo 2: Instalar Dependências
+Instale todas as dependências necessárias para o projeto:
+
+
+npm install
+Passo 3: Instalar o Cypress
+
+### Instale o Cypress para os testes automatizados:
+npm install cypress --save-dev
+
+
+### Executando o Servidor
+Rodando o Servidor com Node.js
+Você pode rodar o servidor normalmente usando o Node.js:
+npm start
+
+### Rodando o Servidor com Nodemon (Desenvolvimento)
+Para facilitar o desenvolvimento, use o nodemon, que reinicia o servidor automaticamente ao detectar mudanças no código:
+npm run dev
+O servidor será iniciado e estará disponível em http://localhost:3000.
+
+### Executando os Testes
+Rodando os Testes com Cypress
+Para rodar os testes no modo "headless" (sem abrir o navegador), execute o seguinte comando:
+bash
+Copiar código
+npx cypress run
+Para rodar os testes em modo interativo (com interface gráfica), execute:
+bash
+Copiar código
+npx cypress open
+Isso abrirá o painel do Cypress, onde você pode executar os testes manualmente e visualizar os resultados.
+
+## Detalhes Técnicos
+### 1. Validação do JWT
+A API expõe um endpoint POST /validate-jwt que recebe um JSON contendo um JWT. A lógica de validação segue estas etapas:
+
+Verifica se o JWT é válido.
+Verifica se o JWT contém apenas os claims Name, Role e Seed.
+Valida que o claim Name não contém números e que não excede 256 caracteres.
+Valida que o claim Role é um dos valores permitidos: Admin, Member ou External.
+Valida que o claim Seed é um número primo.
+
+#### 2. Testes Automatizados
+Os testes verificam os seguintes casos:
+
+Validação de JWTs válidos: Testes verificam JWTs que seguem todas as regras.
+Validação de JWTs inválidos: Testes cobrem casos como claims adicionais, Name contendo números, Seed não sendo primo, entre outros.
+Cobertura de Erros: Testes verificam as respostas de erro da API quando são fornecidos JWTs malformados.
+
+### 3. Estrutura de Rotas
+A API possui uma única rota:
+
+POST /validate-jwt: Valida o JWT com base nas regras especificadas.
+Exemplo de requisição:
+
+POST /validate-jwt
+Content-Type: application/json
+
 {
-  "Role": "Admin",
-  "Seed": "7841",
-  "Name": "Toninho Araujo"
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJTZWVkIjoiNzUxIiwiTmFtZSI6IkFsaWNlIE5ldXRvbiJ9.H5g3lz0xW6ZVKl8ctZoxb_bTcCnAguqfHl5wx1uGVHs"
 }
-```
 
-### Caso 2:
-Entrada:
-```
-eyJhbGciOiJzI1NiJ9.dfsdfsfryJSr2xrIjoiQWRtaW4iLCJTZrkIjoiNzg0MSIsIk5hbrUiOiJUb25pbmhvIEFyYXVqbyJ9.QY05fsdfsIjtrcJnP533kQNk8QXcaleJ1Q01jWY_ZzIZuAg
-```
-Saida:
-```
-falso
-```
-Justificativa:
-JWT invalido
-
-### Caso 3:
-Entrada:
-```
-eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiODgwMzciLCJOYW1lIjoiTTRyaWEgT2xpdmlhIn0.6YD73XWZYQSSMDf6H0i3-kylz1-TY_Yt6h1cV2Ku-Qs
-```
-Saida:
-```
-falso
-```
-Justificativa:
-Abrindo o JWT, a Claim Name possui caracter de números
-```json
-{
-  "Role": "External",
-  "Seed": "72341",
-  "Name": "M4ria Olivia"
-}
-```
-
-### Caso 4:
-Entrada:
-```
-eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiTWVtYmVyIiwiT3JnIjoiQlIiLCJTZWVkIjoiMTQ2MjciLCJOYW1lIjoiVmFsZGlyIEFyYW5oYSJ9.cmrXV_Flm5mfdpfNUVopY_I2zeJUy4EZ4i3Fea98zvY
-```
-Saida:
-```
-falso
-```
-Justificativa:
-Abrindo o JWT, foi encontrado mais de 3 claims.
-```json
-{
-  "Role": "Member",
-  "Org": "BR",
-  "Seed": "14627",
-  "Name": "Valdir Aranha"
-}
-```
-## Pontos que daremos maior atenção
-
-- Testes de unidade / integração
-- Abstração, acoplamento, extensibilidade e coesão
-- Design de API
-- SOLID
-- Documentação da solução no *README* 
-- Commits realizados durante a construção
-- Observability (Logging/Tracing/Monitoring)
-
-## Demais Itens
-
-- Containerização da aplicação
-- Helm Chart em um cluster de Kubernetes/ECS/FARGATE
-- Repositório no GitHub.
-- Deploy Automatizado para Infra-Estrutura AWS
-- scripts ci/cd
-- coleções do Insomnia ou ferramentas para execução
-- Provisione uma infraestrutura na AWS com OpenTerraform
-- expor a api em algum provedor de cloud (aws, azure...)
-- Uso de Engenharia de Prompt.
-
-### Sobre a documentação
-
-Nesta etapa do processo seletivo queremos entender as decisões por trás do código, portanto é fundamental que o *README* tenha algumas informações referentes a sua solução.
-
-Algumas dicas do que esperamos ver são:
-
-- Instruções básicas de como executar o projeto;
-- Detalhes da descrição dos metodos
-- Caso algo não esteja claro e você precisou assumir alguma premissa, quais foram e o que te motivou a tomar essas decisões.
-
-## Como esperamos receber sua solução
-
-Esta etapa é eliminatória, e por isso esperamos que o código reflita essa importância.
-
-Se tiver algum imprevisto, dúvida ou problema, por favor entre em contato com a gente, estamos aqui para ajudar.
-
-Nos envie o *link de um repo público* com a sua solução
-
+### Estrutura de Diretórios
+jwt-validator/
+│
+├── cypress/                # Testes automatizados com Cypress
+│   └── integration/
+│       └── jwtValidator.spec.js
+│
+├── node_modules/           # Dependências instaladas
+├── src/
+│   └── server.js           # Código do servidor Node.js com Express
+│
+├── .gitignore              # Arquivos ignorados pelo Git
+├── package.json            # Arquivo de configuração do npm
+├── README.md               # Documentação do projeto
+└── cypress.json            # Configuração do Cypress
